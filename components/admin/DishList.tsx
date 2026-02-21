@@ -24,7 +24,6 @@ export default function DishList({
   onRefresh: () => void;
   onEdit: (dish: Dish) => void;
 }) {
-
   const toggleVisibility = async (dish: Dish) => {
     await supabase
       .from("dishes")
@@ -42,7 +41,6 @@ export default function DishList({
 
   return (
     <div className="border p-6 rounded-md space-y-4">
-
       <h2 className="font-semibold">Dish List</h2>
 
       {dishes.map((dish) => (
@@ -51,13 +49,10 @@ export default function DishList({
           className="border p-3 flex justify-between items-center"
         >
           <div>
-
             <div className="font-medium">
               {dish.name_en} / {dish.name_mr}
               {!dish.is_visible && (
-                <span className="text-red-500 text-xs ml-2">
-                  (Hidden)
-                </span>
+                <span className="text-red-500 text-xs ml-2">(Hidden)</span>
               )}
             </div>
 
@@ -71,14 +66,10 @@ export default function DishList({
                 </span>
               ))}
             </div>
-
           </div>
 
           <div className="flex gap-2 text-xs">
-            <button
-              onClick={() => onEdit(dish)}
-              className="border px-2"
-            >
+            <button onClick={() => onEdit(dish)} className="border px-2">
               Edit
             </button>
 
@@ -96,7 +87,6 @@ export default function DishList({
               Delete
             </button>
           </div>
-
         </div>
       ))}
     </div>
