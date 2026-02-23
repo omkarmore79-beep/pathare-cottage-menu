@@ -18,35 +18,30 @@ interface Dish {
 }
 
 export default function DishCard({ dish }: { dish: Dish }) {
-
   const prices = dish.prices || [];
+
+  // ✅ image exists only if it’s a non-empty string
+  const hasImage = Boolean(dish.image && dish.image.trim().length > 0);
 
   return (
     <div className="border-b border-[#5a1f1f]/10 py-4">
-
       <div className="flex gap-3">
-
-        {/* Image */}
-        {dish.image ? (
+        {/* ✅ Image only when available (no "No Image" placeholder) */}
+        {hasImage && (
           <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
             <img
-              src={dish.image}
+              src={dish.image!}
               alt={dish.name}
               className="w-full h-full object-cover"
+              loading="lazy"
             />
-          </div>
-        ) : (
-          <div className="w-20 h-20 rounded-xl bg-gray-200 flex items-center justify-center text-xs text-gray-500 flex-shrink-0">
-            No Image
           </div>
         )}
 
         {/* Content + Prices Layout */}
         <div className="flex flex-1 justify-between gap-6">
-
           {/* LEFT SIDE */}
           <div className="flex-1">
-
             {/* Name + Veg */}
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="text-[#5a1f1f] font-semibold text-sm">
@@ -73,7 +68,6 @@ export default function DishCard({ dish }: { dish: Dish }) {
 
             {/* Tags */}
             <div className="flex flex-wrap gap-2 mt-2">
-
               {dish.isBestseller && (
                 <span className="text-[10px] px-2 py-[3px] bg-yellow-400 text-white font-semibold rounded-full">
                   Bestseller
@@ -91,16 +85,14 @@ export default function DishCard({ dish }: { dish: Dish }) {
                   Pathare Special
                 </span>
               )}
-
             </div>
           </div>
 
           {/* RIGHT SIDE PRICES (STACKED) */}
           <div className="flex flex-col items-end gap-1 min-w-[80px]">
-
-            {prices.map((p) => (
+            {prices.map((p, idx) => (
               <div
-                key={p.label}
+                key={`${dish.id}-${p.label}-${idx}`}
                 className="text-sm font-semibold text-[#5a1f1f] whitespace-nowrap"
               >
                 {p.label && prices.length > 1 && (
@@ -111,9 +103,7 @@ export default function DishCard({ dish }: { dish: Dish }) {
                 ₹{p.price}
               </div>
             ))}
-
           </div>
-
         </div>
       </div>
     </div>
