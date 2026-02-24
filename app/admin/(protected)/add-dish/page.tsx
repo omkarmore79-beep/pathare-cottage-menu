@@ -16,26 +16,30 @@ export default function AdminPage() {
   const formTopRef = useRef<HTMLDivElement | null>(null);
 
   const fetchData = async () => {
-    const { data: categoryData } = await supabase
+    const { data: categoryData, error: categoryError } = await supabase
       .from("categories")
       .select("*")
-      .eq("restaurant_id", RESTAURANT_ID);
+      .eq("restaurant_id", RESTAURANT_ID)
+      .order("display_order", { ascending: true }); // ✅ IMPORTANT
 
-    const { data: dishData } = await supabase
+    const { data: dishData, error: dishError } = await supabase
       .from("dishes")
       .select(
         `
-        *,
-        dish_prices (
-          id,
-          label_en,
-          label_mr,
-          price
-        )
-      `
+          *,
+          dish_prices (
+            id,
+            label_en,
+            label_mr,
+            price
+          )
+        `
       )
       .eq("restaurant_id", RESTAURANT_ID)
       .order("created_at", { ascending: false });
+
+    if (categoryError) console.error("Category fetch error:", categoryError);
+    if (dishError) console.error("Dish fetch error:", dishError);
 
     if (categoryData) setCategories(categoryData);
     if (dishData) setDishes(dishData);
@@ -48,7 +52,7 @@ export default function AdminPage() {
   const handleEdit = (dish: any) => {
     setEditingDish(dish);
 
-    // Scroll to the form so user can edit immediately
+    // ✅ Scroll to the form so user can edit immediately
     setTimeout(() => {
       formTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 0);
@@ -57,10 +61,10 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen w-full overflow-y-auto">
       <div className="p-8 space-y-8 max-w-4xl">
-        {/* Anchor for scrolling */}
+        {/* ✅ Anchor for scrolling */}
         <div ref={formTopRef} />
 
-        {/* Dish Form */}
+        {/* ✅ Dish Form */}
         <DishForm
           categories={categories}
           editingDish={editingDish}
@@ -68,7 +72,8 @@ export default function AdminPage() {
           onSuccess={() => {
             setEditingDish(null);
             fetchData();
-            // After save, also go to top
+
+            // ✅ After save, also go to top
             setTimeout(() => {
               formTopRef.current?.scrollIntoView({
                 behavior: "smooth",
@@ -78,17 +83,13 @@ export default function AdminPage() {
           }}
         />
 
-        {/* Category Manager */}
+        {/* ✅ Category Manager */}
         <CategoryManager categories={categories} onRefresh={fetchData} />
 
-        {/* Dish List */}
-        <DishList
-          dishes={dishes}
-          onRefresh={fetchData}
-          onEdit={handleEdit}
-        />
+        {/* ✅ Dish List */}
+        <DishList dishes={dishes} onRefresh={fetchData} onEdit={handleEdit} />
 
-        {/* Back to top button */}
+        {/* ✅ Back to top button */}
         <button
           type="button"
           onClick={() =>
