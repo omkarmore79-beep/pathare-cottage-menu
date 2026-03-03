@@ -19,7 +19,7 @@ export default function StickyHeader() {
   return (
     <div className="fixed top-0 left-0 w-full bg-[#2b0f0f]/95 backdrop-blur-md z-50 py-3 shadow-lg">
       <div className="max-w-[480px] mx-auto text-center text-amber-300 font-medium tracking-wide">
-        पाथरे खानावळ
+        पठारे खानावळ
       </div>
     </div>
   );
